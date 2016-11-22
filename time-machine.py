@@ -52,6 +52,9 @@ RSYNC_ARGS = (
     '--itemize-changes',
     '--progress',
     '--relative',
+    '--perms',
+    '--owner',
+    '--group'
 )
 #        '--perms',
 #        '--partial',
