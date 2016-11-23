@@ -500,6 +500,11 @@ def print_fs_stat(stat):
         logger('    free inodes: %s, %.1f%% used' % (
             humanize_inodes(inodes_free), inodes_used))
 
+def size_dir(dir):
+    return int(subprocess.check_output(['du','-s', dir]).split()[0].decode('utf-8')) * 1024
+
+def print_snaps_stat(stat):
+    logger('    used space by snapshot(s): %s' % (humanize_bytes(stat)))
 
 def check_freespace(stat):
     ''' abort backup if not enough free space or inodes '''
@@ -540,6 +545,7 @@ def main():
         sys.exit(2)
 
     stat_before = os.statvfs(cfg['dest_path'])
+    stat_snaps_before = size_dir(cfg['dest_path'])
     check_freespace(stat_before)
 
     t_start = datetime.now()
@@ -553,13 +559,17 @@ def main():
 
     # report
     stat_after = os.statvfs(cfg['dest_path'])
+    stat_snaps_after = size_dir(cfg['dest_path'])
     logger('Filesystem before backup:')
     print_fs_stat(stat_before)
+    print_snaps_stat(stat_snaps_before)
     logger('Filesystem after backup:')
     print_fs_stat(stat_after)
-
+    print_snaps_stat(stat_snaps_after)
     t_used = datetime.now() - t_start
+    s_used_diff = stat_snaps_after - stat_snaps_before
     logger('Backup runtime: %s' % str(t_used).split('.')[0])
+    logger('Backup snapshots(s) space diff before/after: %s' % str(humanize_bytes(s_used_diff)))
     flock_release(fd)
 
 
