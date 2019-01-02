@@ -120,7 +120,7 @@ def flock_release(fd):
 
 
 def run_rsync(args, verbose=False):
-    cmd = ['rsync']
+    cmd = ['rsync --bwlimit=5000']
     cmd.extend(args)
     logger('running cmd: %s' % ' '.join(cmd))
     try:
