@@ -545,7 +545,7 @@ def main():
         sys.exit(2)
 
     stat_before = os.statvfs(cfg['dest_path'])
-    stat_snaps_before = size_dir(cfg['dest_path'])
+    #stat_snaps_before = size_dir(cfg['dest_path'])
     check_freespace(stat_before)
 
     t_start = datetime.now()
@@ -559,17 +559,17 @@ def main():
 
     # report
     stat_after = os.statvfs(cfg['dest_path'])
-    stat_snaps_after = size_dir(cfg['dest_path'])
+    #stat_snaps_after = size_dir(cfg['dest_path'])
     logger('Filesystem before backup:')
     print_fs_stat(stat_before)
-    print_snaps_stat(stat_snaps_before)
+    #print_snaps_stat(stat_snaps_before)
     logger('Filesystem after backup:')
     print_fs_stat(stat_after)
-    print_snaps_stat(stat_snaps_after)
+    #print_snaps_stat(stat_snaps_after)
     t_used = datetime.now() - t_start
-    s_used_diff = stat_snaps_after - stat_snaps_before
+    #s_used_diff = stat_snaps_after - stat_snaps_before
     logger('Backup runtime: %s' % str(t_used).split('.')[0])
-    logger('Backup snapshots(s) space diff before/after: %s' % str(humanize_bytes(s_used_diff)))
+    #logger('Backup snapshots(s) space diff before/after: %s' % str(humanize_bytes(s_used_diff)))
     flock_release(fd)
 
 
