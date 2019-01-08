@@ -8,7 +8,7 @@ Inspired by Back In Time, http://backintime.le-web.org
 
 __license__ = 'GNU GPL v2'
 __copyright__ = '2016, Chen Wei <weichen302@gmail.com>'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 import os
 import sys
