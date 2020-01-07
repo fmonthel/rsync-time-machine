@@ -54,6 +54,7 @@ RSYNC_ARGS = (
     '--relative',
     '--perms',
     '--owner',
+    '-e "ssh -q"',
     '--group'
 )
 #        '--perms',
