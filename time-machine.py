@@ -166,7 +166,6 @@ def take_snapshot():
     now = datetime.utcnow()
     backup_dst = os.path.join(cfg['dest_path'],
                               now.strftime("%Y-%m-%d_%H:%M:%S_GMT"))
-    os.mkdir(backup_dst)
     args = [x for x in RSYNC_ARGS]
     exclude_patterns = ['--exclude=%s' % x for x in cfg['exclude_patterns']]
     args.extend(exclude_patterns)
@@ -188,6 +187,7 @@ def take_snapshot():
         else:
             logger('Error, cannot find the last snapshot, maybe the "latest" '
                    'symbol link has been deleted. We will recreate it empty for next backup...')
+        os.mkdir(backup_dst)
         os.symlink(backup_dst, latest)
         exit(2)
 
@@ -195,15 +195,16 @@ def take_snapshot():
         if os.path.lexists(latest):
             os.remove(latest)
 
+    if not os.path.exists(backup_dst):
+        os.mkdir(backup_dst)
+    
     args.extend(cfg['sources'])
     args.append(backup_dst)
 
     ret = run_rsync(args)
-    if ret == 0:
-        if os.path.exists(latest):
-            os.remove(latest)
-
-        os.symlink(backup_dst, latest)
+    if os.path.exists(latest):
+         os.remove(latest)
+    os.symlink(backup_dst, latest)
 
     return now
 
