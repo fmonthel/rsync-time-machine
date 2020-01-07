@@ -165,6 +165,7 @@ def take_snapshot():
     now = datetime.utcnow()
     backup_dst = os.path.join(cfg['dest_path'],
                               now.strftime("%Y-%m-%d_%H:%M:%S_GMT"))
+    os.mkdir(backup_dst)
     args = [x for x in RSYNC_ARGS]
     exclude_patterns = ['--exclude=%s' % x for x in cfg['exclude_patterns']]
     args.extend(exclude_patterns)
@@ -181,13 +182,12 @@ def take_snapshot():
 
     elif len(snapshots) > 0 and not os.path.exists(latest):
         if os.path.lexists(latest):
-            logger('Error, the "latest" symbol link is broken. Remove'
-                   ' "latest" and recreate that link by run:\n'
-                   'ln -fs yyyy-mm-dd_HH:MM:SS_GMT latest')
+            os.remove(latest)
+            logger('Error, the "latest" symbol link is broken and will be recreated empty for next backup...')
         else:
             logger('Error, cannot find the last snapshot, maybe the "latest" '
-                   'symbol link has been deleted. Please create that link by '
-                   'run:\nln -s yyyy-mm-dd_HH:MM:SS_GMT latest')
+                   'symbol link has been deleted. We will recreate it empty for next backup...')
+        os.symlink(backup_dst, latest)
         exit(2)
 
     else:  # len(snapshots) == 0
