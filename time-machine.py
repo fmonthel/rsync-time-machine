@@ -195,7 +195,7 @@ def take_snapshot():
         if os.path.lexists(latest):
             os.remove(latest)
 
-    args.extend(cfg['sources'] + str("/"))
+    args.extend(cfg['sources'])
     args.append(backup_dst)
 
     ret = run_rsync(args)
@@ -418,10 +418,10 @@ def get_config(conf):
     source_paths = config.get('source', 'path')
 
     if source_host and source_user:  # ssh remote
-        cfg['sources'] = ['%s@%s:%s' % (source_user, source_host, p)
+        cfg['sources'] = ['%s@%s:%s/' % (source_user, source_host, p)
                           for p in source_paths]
     elif source_host and not source_user:  # ssh username in .ssh/config
-        cfg['sources'] = ['%s:%s' % (source_host, p)
+        cfg['sources'] = ['%s:%s/' % (source_host, p)
                           for p in source_paths]
     else:  # local path
         cfg['sources'] = source_paths
