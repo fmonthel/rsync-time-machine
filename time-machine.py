@@ -121,7 +121,7 @@ def flock_release(fd):
 
 
 def run_rsync(args, verbose=False):
-    cmd = ['rsync --bwlimit=5000']
+    cmd = ['rsync']
     cmd.extend(args)
     logger('running cmd: %s' % ' '.join(cmd))
     try:
@@ -195,7 +195,7 @@ def take_snapshot():
         if os.path.lexists(latest):
             os.remove(latest)
 
-    args.extend(cfg['sources'])
+    args.extend(cfg['sources'] + str("/"))
     args.append(backup_dst)
 
     ret = run_rsync(args)
